@@ -1,67 +1,65 @@
-import re
 from collections import deque
 
-f = open("advent code 2023\\test.txt","r")
-lignes = f.read()
+f = open("adventOfCode\\2023\\input20.txt","r")
+lignes = f.readlines()
 f.close()
-lignes= lignes.split("\n")
-dico = {}
-dico_input_con = {}
-for ligne in lignes:
-    name, destination = ligne.split("->")
-    dico[re.findall('[a-zA-Z]+',name)[0]] = {'type': name[0], 'etat': False, 'last': 'low', "destinations": [v.strip() for v in destination.split(", ")]}
-    if name[0] == '&':
-        dico_input_con[re.findall('[a-zA-Z]+',name)[0]] = []
 
-for ligne in lignes:
-    name, destination = ligne.split("->")
-    destination = [v.strip() for v in destination.split(", ")]
-    for d in destination:
-        if d in dico_input_con:
-            dico_input_con[d].append(re.findall('[a-zA-Z]+',name)[0])
+modules = {}
+for l in lignes:
+    module, destinataires = l.strip().split("->")
+    module = module.strip()
+    destinataires =[d.strip() for d in destinataires.split(",")]
+    if module == "broadcaster": start = destinataires
+    else: modules[module[1:]] = {'type': module[0], "etat": False, 'destinataires': destinataires}
+    
+for module, valeurs in modules.items():
+    destinataires = valeurs['destinataires']
+    for d in destinataires:
+        if d not in modules:
+            continue
+        if modules[d]['type'] == '&':
+            if modules[d]['etat'] == False: modules[d]['etat'] = {}
+            modules[d]['etat'][module] = 'low'
 
-print(dico_input_con)
+low = hight = 0
 
-pile = deque([['low', 'broadcaster']])
+for i in range(1000):
+    low += 1
+    pile = deque([('broadcaster', d, 'low') for d in start])
 
-while pile:
-    print(pile)
-    p = pile.popleft()
-    signalRecu = p[0]
-    emetteur = p[1]
-    typ = dico[emetteur]['type']
-    destinataires = dico[emetteur]['destinations']
+    while pile:
+        emetteur, destinataire, pulse = pile.popleft()
+        if pulse == "low": low += 1
+        else: hight += 1
 
-    if(typ == 'b'):
-        for d in destinataires:
-            pile.append([signalRecu, d])
+        if destinataire not in modules:
+            continue
 
-    if(typ == '%'):
-        dico[emetteur]['last'] = signalRecu
-        if signalRecu == 'low':
-            dico[emetteur]['etat'] = not(dico[emetteur]['etat'])
-            if dico[emetteur]['etat']:
-                signalEnvoye = 'hight'
-            else: 
-                signalEnvoye = 'low'
-            for d in destinataires:
-                pile.append([signalEnvoye, d])
+        next = modules[destinataire]
 
-    if(typ == '&'):
-        allHight = True
-        for d in dico_input_con[emetteur]:
-            print(d, dico[d]['last'])
-            if dico[d]['last'] == 'low':
-                allHight = False
-                break
-        if allHight:
-            for d in destinataires:
-                pile.append(['low', d])
+        if next['type'] == '%':
+            if pulse == 'low':
+                if next['etat'] == False: nextPulse = 'hight'
+                else: nextPulse = 'low'
+
+                next['etat'] = not(next['etat'])
+                for d in next['destinataires']:
+                    pile.append((destinataire, d, nextPulse))
         else:
-            for d in destinataires:
-                pile.append(['hight', d])
+            allHight = True
+            modules[destinataire]['etat'][emetteur] = pulse
+            for i in next['etat'].values():
+                if i  == 'low': 
+                    allHight = False
+                    break
+            if allHight:
+                nextPulse = 'low'
+            else: nextPulse = 'hight'
 
-print(dico)
+            for d in next['destinataires']:
+                    pile.append((destinataire, d, nextPulse))
 
 
 
+
+print(low*hight)
