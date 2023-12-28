@@ -1,7 +1,7 @@
-
+import random
 print("Happy Xmas")
 
-f = open("advent code 2023\\test.txt","r")
+f = open("adventOfCode\\2023\\input25.txt","r")
 lignes = f.readlines()
 f.close()
 
@@ -15,18 +15,6 @@ for l in lignes:
             dico[n] = []
         dico[n1].append(n)
         dico[n].append(n1)
-
-def scoreCorrespondance(n1, n2):
-    l1 = set()
-    l1.add(n1)
-    for n in dico[n1]:
-        l1.add(n)
-    l2 = set()
-    l2.add(n2)
-    for n in dico[n2]:
-        l2.add(n)
-
-    return len(l1 & l2)
 
 def compterNoeudsMemeComposant(depart):
     pile = [depart]
@@ -56,7 +44,7 @@ def cheminBFS(d, a):
         for n1 in dico[n]:
             if n1 not in visites:
                 chemin[n1] = n
-            pile.append(n1)
+                pile.append(n1)
     c = []
     
     n = a
@@ -78,33 +66,32 @@ def cheminBFS(d, a):
             cv[n1] += 1
         n = n1
 
-    # c.append(d)
-    # c.reverse()
-    # print(c)
-
-
 
 noeuds = [n for n in dico.keys()]
 
-print(cc)
-for n in noeuds:
-    for n2 in noeuds:
-        print(n, n2)
-        cheminBFS(n, n2)
-print(cc)
+nbrNoeuds = len(noeuds)
 
+for i in range(10000):
+        cheminBFS(noeuds[random.randint(0, nbrNoeuds-1)], noeuds[random.randint(0, nbrNoeuds-1)])
 
-print("Il y a", compterNoeudsMemeComposant("cmg"), "noeuds dans ce composant")
+liensTriees = sorted(cc, key=cc.get, reverse=True)
 
-lien = [('hfx','pzl'), ('bvb','cmg'), ('nvd','jqt')]
+liens = liensTriees[:3]
+
+print(liens)
+# ["['mnh', 'qnv']", "['ljh', 'tbg']", "['ffv', 'mfs']"]
+
+print("Il y a", compterNoeudsMemeComposant("mnh"), "noeuds dans ce composant")
+
+lien = [('mnh', 'qnv'), ('ljh', 'tbg'), ('ffv', 'mfs')]
 for l in lien:
     n1,n2 = l
     dico[n1].remove(n2)
     dico[n2].remove(n1)
 
-print("En enlevant hfx/pzl, bvb/cmg et nvd/jqt, on a deux composants")
-t1 = compterNoeudsMemeComposant("cmg")
-t2 = compterNoeudsMemeComposant("bvb")
+print("En enlevant ('mnh', 'qnv'), ('ljh', 'tbg'), ('ffv', 'mfs'), on a deux composants")
+t1 = compterNoeudsMemeComposant("mnh")
+t2 = compterNoeudsMemeComposant("qnv")
 print("Il y a", t1 , "noeuds dans ce composant")
 print("Il y a", t2 , "noeuds dans ce composant")
 print("La reponse est", t1*t2)
@@ -112,4 +99,3 @@ print("La reponse est", t1*t2)
 
 
 
-print(cv)

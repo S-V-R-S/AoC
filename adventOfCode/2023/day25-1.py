@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-f = open("advent code 2023\\input25.txt","r")
+f = open("adventOfCode\\2023\\input25.txt","r")
 lignes = f.readlines()
 f.close()
 
@@ -20,7 +20,7 @@ for l in lignes:
 # https://networkx.org/documentation/latest/reference/algorithms/generated/networkx.algorithms.connectivity.cuts.minimum_edge_cut.html#networkx.algorithms.connectivity.cuts.minimum_edge_cut
 noeudsAEnlever = nx.minimum_edge_cut(G)
 G.remove_edges_from(noeudsAEnlever)
-
+print(noeudsAEnlever)
 # https://networkx.org/documentation/latest/tutorial.html#analyzing-graphs
 graphes = list(nx.connected_components(G)) 
 print(len(graphes[0])*len(graphes[1]))

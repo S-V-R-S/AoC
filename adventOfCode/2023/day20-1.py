@@ -23,10 +23,9 @@ for module, valeurs in modules.items():
 
 low = hight = 0
 
-for i in range(1000):
+for j in range(100000000):
     low += 1
     pile = deque([('broadcaster', d, 'low') for d in start])
-
     while pile:
         emetteur, destinataire, pulse = pile.popleft()
         if pulse == "low": low += 1
