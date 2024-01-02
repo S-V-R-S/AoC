@@ -19,7 +19,7 @@ def constructionMatrice(lignes):
 
 # matrice, depart= constructionMatrice(lectureDuFichier("advent code 2023\\test.txt"))
 
-matrice, depart= constructionMatrice(lectureDuFichier("advent code 2023\\input21.txt"))
+matrice, depart= constructionMatrice(lectureDuFichier("adventOfCode\\2023\\test.txt"))
 
 class Direction(Enum):
     NORD = (0 , -1)
@@ -28,6 +28,7 @@ class Direction(Enum):
     OUEST = (-1, 0)
 
 def positionPossible(x , y, nbrPas):
+
     depart = (x,y)
     visites = {depart}
     pile = [(depart, nbrPas)]
@@ -39,6 +40,7 @@ def positionPossible(x , y, nbrPas):
 
         if dis % 2 == 0:
             pixel.add(point)
+            
         if dis == 0:
             continue
         
@@ -48,10 +50,13 @@ def positionPossible(x , y, nbrPas):
             x1 = x + dx
             y1 = y + dy
 
-            if 0<= x1 <= len(matrice[0])-1 and 0<= y1 <= len(matrice)-1 and matrice[y1][x1] != "#" and (x1,y1) not in visites:
+            xt = x1 % len(matrice[0])
+            yt = y1 % len(matrice)
+            if matrice[yt][xt] != "#" and (x1,y1) not in visites:
                     pile.append(((x1, y1), dis - 1))
                     visites.add((x1,y1))
     return len(pixel)
 
 
-print(positionPossible(depart[0], depart[1], 64))
+print(positionPossible(5, 0, 12))
+print(1594/42)

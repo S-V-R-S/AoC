@@ -17,7 +17,7 @@ def constructionMatrice(lignes):
 
 # matrice, depart= constructionMatrice(lectureDuFichier("advent code 2023\\test.txt"))
 
-matrice, depart= constructionMatrice(lectureDuFichier("advent code 2023\\input21.txt"))
+matrice, depart= constructionMatrice(lectureDuFichier("adventOfCode\\2023\\test.txt"))
 
 
 def checkNextStep(point):
