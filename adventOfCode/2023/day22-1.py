@@ -1,33 +1,58 @@
 from heapq import heappush, heappop
-f = open("advent code 2023\\test.txt","r")
+f = open("adventOfCode\\2023\\input22.txt","r")
 lignes = f.read()
 f.close()
 
-cubes = []
-for l in lignes.split("\n"):
-    p1, p2 = l.split("~")
-    p1 = [int(v) for v in p1.split(',')]
-    x1, y1, z1 = p1
-    p2 = [int(v) for v in p2.split(',')]
-    x2, y2, z2 = p2
-    heappush(cubes, (z1, (x1,y1,z1), (x2, y2, z2)))
+def recupereInput(lignes):
+    cubes = []
+    for l in lignes.split("\n"):
+        p1, p2 = l.split("~")
+        p1 = [int(v) for v in p1.split(',')]
+        x1, y1, z1 = p1
+        p2 = [int(v) for v in p2.split(',')]
+        x2, y2, z2 = p2
+        cubes.append([[x1,y1,z1], [x2, y2, z2]])
 
-def recupererUnEtage(i):
-    liste = []
-    while True:
-        p = heappop(cubes)
-        if p[0] != i:
-            heappush(cubes, p)
-            break
-        liste.append(p)
-    return liste
+    cubes.sort(key=lambda cube: cube[0][2])
+    return cubes
 
-incre = 1
-liste = recupererUnEtage(incre)
+def superposition(c1 , c2):
+    return max(c1[0][0], c2[0][0]) <= min(c1[1][0],c2[1][0]) and max(c1[0][1], c2[0][1]) <= min(c1[1][1],c2[1][1])
 
-while cubes:
-    incre += 1
-    nextStage = recupererUnEtage(incre)
+def faireTomber(cubes):
+    for i, cube in enumerate(cubes):
+        z = 1
+        for c in cubes[:i]:
+            if superposition(cube, c):
+                z = max(c[1][2] + 1, z)
+        taille = cube[1][2] - cube[0][2] 
+        cube[0][2] = z
+        cube[1][2] = z + taille
+        cubes.sort(key=lambda cube: cube[0][2])
+    return cubes
 
 
-    
+cubes = recupereInput(lignes)
+cubes = faireTomber(cubes)
+
+supporte = {i: [] for i in range(len(cubes))}
+estSupporte = {i: [] for i in range(len(cubes))}
+
+
+for i, porteur in enumerate(cubes):
+    for j in range(i+1, len(cubes)):
+        if superposition(cubes[i], cubes[j]) and cubes[i][1][2] == cubes[j][0][2] - 1:
+            supporte[i].append(j)
+            estSupporte[j].append(i)
+
+
+destruction = 0
+
+for i in range(len(cubes)):
+    if all(len(estSupporte[j]) >= 2 for j in supporte[i]):
+        destruction+=1
+
+print(destruction)
+
+
+
