@@ -1,3 +1,6 @@
+import heapq
+import time
+start_time = time.time()
 def lectureDuFichier(chemin):
     f = open(chemin,"r")
     lignes = f.read()
@@ -13,7 +16,7 @@ def constructionMatrice(lignes):
             matrice[i].append(int(case))
     return matrice
 
-matrice = constructionMatrice(lectureDuFichier("advent code 2023\\DAY17-INPUT.txt"))
+matrice = constructionMatrice(lectureDuFichier("adventOfCode\\2023\\input17.txt"))
 
 def leMoinsLoin():
     lml = None
@@ -29,12 +32,11 @@ depart = (0,0,0,0,0,0)
 visites = set()
 avisiter = [depart]
 
-print("exo2:")
+heapq.heapify(avisiter)
+
 while avisiter:
 
-    pt = leMoinsLoin()
-
-    avisiter.remove(pt)
+    pt = heapq.heappop(avisiter)
 
     dis, x, y, dx, dy, nbr = pt
 
@@ -52,7 +54,7 @@ while avisiter:
                 ny = y + diry
 
                 if nx >= 0 and nx <= len(matrice)-1 and ny>=0 and ny<= len(matrice)-1:
-                    avisiter.append(((dis+matrice[ny][nx],nx, ny, dirx, diry, nbr+1)))
+                    heapq.heappush(avisiter, (dis+matrice[ny][nx],nx, ny, dirx, diry, nbr+1))
 
             if nbr >= 4 or (dx,dy) == (0,0):
                 if (dx != dirx or dy != diry) and ( dirx != -dx or diry != -dy):
@@ -60,7 +62,10 @@ while avisiter:
                     ny = y + diry
 
                     if nx >= 0 and nx <= len(matrice)-1 and ny>=0 and ny<= len(matrice)-1:
-                        avisiter.append(((dis+matrice[ny][nx],nx, ny, dirx, diry, 1)))
+                        heapq.heappush(avisiter, (dis+matrice[ny][nx],nx, ny, dirx, diry, 1))
 
 
+end_time = time.time()
+execution_time = end_time - start_time
 
+print(f"Le programme a mis {execution_time} secondes pour s'exécuter.")
