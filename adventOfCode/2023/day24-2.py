@@ -13,8 +13,11 @@ for i,l in enumerate(lignes):
     vx,vy,vz = [int(i) for i in vitesse.split(",")]
     equations.append((x-xc)*(vyc-vy)-(y-yc)*(vxc-vx))
     equations.append((x-xc)*(vzc-vz)-(z-zc)*(vxc-vx))
-
+    if i == 3:
+        break
 
 reponse = sympy.solve(equations)
 reponse = reponse[0]
-print(reponse[xc]+reponse[yc]+reponse[zc])
+somme = reponse[xc]+reponse[yc]+reponse[zc]
+print(somme, reponse)
+print(somme == 711031616315001)
