@@ -1,60 +1,24 @@
 
-def creer_matrice():
-    with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
-        lignes = file.read().splitlines()
-        matrice = []
-        for i, ligne in enumerate(lignes):
-            matrice.append([])
-            for j, letter in enumerate(ligne):
-                matrice[i].append(letter)
-    return matrice
 
-
+with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
+     matrice = file.read().splitlines()
 score = 0
-matrice = creer_matrice()
+direction = [-1,0,1]
 
 # y descend x a droite
+
 def chercher_xmas(matrice, point):
      nbr = 0
-     x,y = point[0], point[1]
+     x, y = point[0], point[1]
      
-    #  a droite
-     if x < len(matrice) - 3:
-          if matrice[y][x] == 'X' and matrice[y][x+1] == 'M' and matrice[y][x+2] == 'A' and matrice[y][x+3] == 'S':
-               nbr +=1
-     # a gauche
-     if x > 2:
-          if matrice[y][x] == 'X' and matrice[y][x-1] == 'M' and matrice[y][x-2] == 'A' and matrice[y][x-3] == 'S':
-               nbr +=1
-    #  a droite
-     if y < len(matrice[0]) - 3:
-          if matrice[y][x] == 'X' and matrice[y+1][x] == 'M' and matrice[y+2][x] == 'A' and matrice[y+3][x] == 'S':
-               nbr +=1
-     # a gauche
-     if y > 2:
-          if matrice[y][x] == 'X' and matrice[y-1][x] == 'M' and matrice[y-2][x] == 'A' and matrice[y-3][x] == 'S':
-               nbr +=1
-     # en bas a droite 
-     if x < len(matrice) - 3 and y < len(matrice[0]) - 3:
-          if matrice[y][x] == 'X' and matrice[y+1][x+1] == 'M' and matrice[y+2][x+2] == 'A' and matrice[y+3][x+3] == 'S':
-               nbr +=1
-     # en haut a gauche
-     if x > 2 and y > 2:
-          if matrice[y][x] == 'X' and matrice[y-1][x-1] == 'M' and matrice[y-2][x-2] == 'A' and matrice[y-3][x-3] == 'S':
-               nbr +=1
-
-    # en bas a gauche
-     if x > 2 and y < len(matrice[0]) - 3:
-          if matrice[y][x] == 'X' and matrice[y+1][x-1] == 'M' and matrice[y+2][x-2] == 'A' and matrice[y+3][x-3] == 'S':
-               nbr +=1
-     # en bas a gauche
-     if x < len(matrice) - 3 and y > 2:
-          if matrice[y][x] == 'X' and matrice[y-1][x+1] == 'M' and matrice[y-2][x+2] == 'A' and matrice[y-3][x+3] == 'S':
-               nbr +=1
-               
-
-
-
+     for dx in direction:
+          for dy in direction:
+               if 0 <= x + 3*dx < len(matrice) and 0 <= y + 3*dy < len(matrice[0]):
+                    word = ""
+                    for k in range(4):
+                         word += matrice[y + dy*k][x + dx*k]
+                    if word == 'XMAS':
+                         nbr += 1
      return nbr
 
 
