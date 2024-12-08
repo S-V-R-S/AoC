@@ -1,6 +1,8 @@
-dico = {}
-antennes = set()
+import time
 
+start_time = time.time()
+
+dico = {}
 antinodes = set()
 
 with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
@@ -13,57 +15,34 @@ with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:
             if letter != ".":
                 if letter not in dico:
                     dico[letter] = []
-                antennes.add((j,i))
                 dico[letter].append([j,i])
 
-print(len(matrice), "-", len(matrice[0]))
+def add_nodes(x,y,dx,dy):
+    while (0<= x < len(matrice[0])) and (0<= y < len(matrice)):
+        antinodes.add((x,y))
+        x = dx + x
+        y = dy + y
 
 def create_antinodes(point1, point2):
     x1, y1 = point1
     x2, y2 = point2
 
-    antinodes.add((x1,y1))
-    antinodes.add((x2,y2))
-
     dx = x1 - x2
     dy = y1 - y2
 
-    x = dx + x1
-    y = dy + y1
-
-    while (0<= x < len(matrice[0])) and (0<= y < len(matrice)):
-        
-
-        if (0<= x < len(matrice[0])) and (0<= y < len(matrice)):
-            antinodes.add((x,y))
-        x = dx + x
-        y = dy + y
-    
-    dx = x2 - x1
-    dy = y2 - y1
-
-    x = x2 + dx
-    y = y2 + dy
-
-    while (0<= x < len(matrice[0])) and (0<= y < len(matrice)):
-        
-        if (0<= x < len(matrice[0])) and (0<= y < len(matrice)):
-            antinodes.add((x,y))
-        x = x + dx
-        y = y + dy
+    add_nodes(x1,y1,dx,dy)
+    add_nodes(x2,y2,-dx,-dy)
 
 
 for type in dico.keys():
-    for point1 in dico[type]:
-        for point2 in dico[type]:
+    for p, point1 in enumerate(dico[type]):
+        for i in range (p+1, len(dico[type])):
+            create_antinodes(point1, dico[type][i])
 
-            if point1!=point2:
-                # print("couple", point1, "-", point2)
-                create_antinodes(point1, point2)
-
-
-print(antinodes)
-print(len(antinodes))
+# 1308
+end_time = time.time()
+elapsed_time_ms = (end_time - start_time) * 1000
+print(f"Le programme a duré {elapsed_time_ms:.2f} ms est la réponse est", len(antinodes))
 
 
 

@@ -1,9 +1,3 @@
-import re
-import math
-from heapq import heappush, heappop
-from enum import Enum
-                 
-
 def creer_tab():
         with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
                 lignes = file.read().splitlines()
