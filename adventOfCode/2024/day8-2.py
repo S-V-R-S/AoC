@@ -5,7 +5,7 @@ start_time = time.time()
 dico = {}
 antinodes = set()
 
-with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
+with open('adventOfCode/2024/input8.txt', encoding="UTF-8", mode= "r") as file:  
     lignes = file.read().splitlines()
     matrice = []
     for i, ligne in enumerate(lignes):
