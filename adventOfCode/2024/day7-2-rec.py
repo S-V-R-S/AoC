@@ -1,3 +1,7 @@
+import time
+
+start_time = time.time()
+
 def correct(answer, numbers):
     if answer == numbers[0] and len(numbers) == 1 : return True
     if answer != numbers[0] and len(numbers) == 1 : return False
@@ -18,5 +22,7 @@ for l, ligne in enumerate(lignes):
         resultat+=answer
 
 
-
-print(resultat)
+# 472290821152397
+end_time = time.time()
+elapsed_time_ms = (end_time - start_time) * 1000
+print(f"Le programme a duré {elapsed_time_ms:.2f} ms est la réponse est", resultat)
