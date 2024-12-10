@@ -4,7 +4,7 @@ start_time = time.time()
 dico = {}
 antinodes = set()
 
-with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
+with open('adventOfCode/2024/input8.txt', encoding="UTF-8", mode= "r") as file:  
     lignes = file.read().splitlines()
     matrice = []
     for i, ligne in enumerate(lignes):
@@ -39,6 +39,7 @@ for type in dico.keys():
         for i in range (p+1, len(dico[type])):
             create_antinodes(point1, dico[type][i])
 
+# 409
 end_time = time.time()
 elapsed_time_ms = (end_time - start_time) * 1000
 print(f"Le programme a duré {elapsed_time_ms:.2f} ms est la réponse est", len(antinodes))
