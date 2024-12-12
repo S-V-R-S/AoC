@@ -4,6 +4,7 @@ start_time = time.time()
 
 directions = [[0 , -1], [0, 1], (1, 0), (-1, 0)]
 
+# je fais la matrice et recupere les positions des 0 
 liste0 = []
 with open('adventOfCode/2024/input10.txt', encoding="UTF-8", mode= "r") as file:  
     lignes = file.read().splitlines()
@@ -18,10 +19,14 @@ with open('adventOfCode/2024/input10.txt', encoding="UTF-8", mode= "r") as file:
 
 score = 0
 
+# pour tous les 0 trouves 
 for point in liste0:
     dico = {}
+    # pour la partie2 faut mettre une liste a la place du set 
     dico[0] = set()
     dico[0].add(point)
+    #  les cles du dico c'est les nombres de 0 à 9
+    # les valeurs c'est les positions qui sont atteignables  par les chemins
 
     for i in range(1,10):
         dico[i] = set()
