@@ -27,7 +27,7 @@ def traduire(op, dico):
     if op == 6:
         return dico["C"]
     
-print(dico, programme)
+
 
 pointer = 0
 output = []
@@ -56,7 +56,7 @@ while pointer < len(programme):
         dico['C'] = dico['A'] // 2**traduire(operand, dico)
     pointer += 2
 
-
+print(",".join(map(str, programme)))
 print(",".join(map(str, output)))
 
 end_time = time.time()

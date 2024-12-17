@@ -63,25 +63,24 @@ start = 1
 resultat= []
 step = 1
 possibilite = {}
-possibilite[1]
-while resultat != programme:
+possibilite[1] = [1]
+solution = []
+while step < 17:
+    possibilite[step+1] = []
     for pos in possibilite[step]:
+        start = pos
         for i in range(start,start + 8):
-            print(i)
             dico["A"]= i
             resultat = programme_to_out(dico, programme)
-            print(resultat, programme[-step:])
             if resultat == programme[-step:]:
-                possibilite.append(i)
+                if resultat == programme:
+                    solution.append(i)
+                
+                possibilite[step+1].append(i*8)
     step += 1
-    
 
-
-
-
-
-
-
+# [216584205979245, 216584205979327, 234176392023661, 234176392023743]
+print(min(solution))
 
 
 
