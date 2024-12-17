@@ -3,7 +3,7 @@ import time
 start_time = time.time()
 import re
 
-with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
+with open('adventOfCode/2024/input17.txt', encoding="UTF-8", mode= "r") as file:  
     lignes = file.read().splitlines()
 
 dico = {}
@@ -26,21 +26,20 @@ def traduire(op, dico):
         return dico["B"]
     if op == 6:
         return dico["C"]
-    
-print(dico, programme)
 
-def programme_to_out(dico, programme):
+def programme_to_out(dicoi, programme):
+    dico = dicoi.copy()
     pointer = 0
     output = []
 
     while pointer < len(programme):
         opcode = programme[pointer]
         operand = programme[pointer +1]
-
+        
         if opcode == 0:
             dico['A'] = dico['A'] // 2**traduire(operand, dico)
         if opcode == 1:
-            dico['B'] ^= operand
+            dico['B'] = dico['B'] ^ operand
         if opcode == 2:
             dico['B'] = traduire(operand, dico) % 8
         if opcode == 3:
@@ -48,7 +47,7 @@ def programme_to_out(dico, programme):
                 pointer = operand
                 continue
         if opcode == 4:
-            dico['B'] ^= dico['C']
+            dico['B'] = dico['B'] ^ dico['C']
         if opcode == 5:
             output.append(traduire(operand, dico) % 8)
         if opcode == 6:
@@ -56,18 +55,34 @@ def programme_to_out(dico, programme):
         if opcode == 7:
             dico['C'] = dico['A'] // 2**traduire(operand, dico)
         pointer += 2
-
-        if output != programme[:len(output)]:
-            return output
     return output
+    
+# 35184372088832 
+solution = {}
+start = 1
+resultat= []
+step = 1
+possibilite = {}
+possibilite[1]
+while resultat != programme:
+    for pos in possibilite[step]:
+        for i in range(start,start + 8):
+            print(i)
+            dico["A"]= i
+            resultat = programme_to_out(dico, programme)
+            print(resultat, programme[-step:])
+            if resultat == programme[-step:]:
+                possibilite.append(i)
+    step += 1
+    
 
 
-incre = 17083025
-dico["A"] = incre
-while programme_to_out(dico,programme) != programme:
-    dico["A"] = incre
-    incre += 1
-    print(dico["A"])
+
+
+
+
+
+
 
 
 
