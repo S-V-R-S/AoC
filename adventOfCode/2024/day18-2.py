@@ -30,28 +30,18 @@ def nodes_in(coor, matrice):
       return(nodes)
 
 def dijkstra(matrice, point_A, point_B):
-    path = []
     to_explore = [point_A]
     explored = []
-    dico = {}
-    dico[point_A] = 0
 
     while to_explore:
         node = to_explore[0]
         del to_explore[0]
         explored.append(node)
-        curr_distance = dico[node]
         neighbours = nodes_in(node, matrice)
         for n in neighbours:
+             if n == point_B: return True
              if n not in explored and n not in to_explore:
                   to_explore.append(n)
-                  dico[n] = curr_distance + 1
-
-             elif dico[n] > curr_distance + 1:
-                  dico[n] = curr_distance + 1
-
-    if point_B in dico:
-        return True
     else: return False
 
 matrice = creer_matrice(70)
@@ -66,21 +56,28 @@ for ligne in lignes:
 start = (0,0)
 end = (70,70)
 
-step = 2500
-for o in octets[:step]:
-    x, y = o
-    matrice[y][x] = "#"
+start_step = 1024
+final_step = len(octets)
 
-step -= 1
-while dijkstra(matrice, start, end):
-    step += 1
-    print(step)
-    x, y = octets[step]
-    matrice[y][x] = "#"
+def test(s):
+    matrice = creer_matrice(70)
+    for o in octets[:s]:
+        x, y = o
+        matrice[y][x] = "#"
+    return dijkstra(matrice, start, end)
 
+while start_step != final_step - 1:
+    step = start_step + (final_step - start_step) //2
+    result = test(step)
+    if result:
+        start_step = step
+    else:
+        final_step = step
+        
 
-print(octets[step])
-
+print(octets[start_step])
 end_time = time.time()
 elapsed_time_ms = (end_time - start_time) * 1000
 print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est")
+# (58, 62)
+# 2989
