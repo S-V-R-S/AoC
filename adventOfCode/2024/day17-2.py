@@ -83,7 +83,7 @@ while step < 17:
 print(min(solution))
 
 
-
+print(possibilite)
 
 
 end_time = time.time()
