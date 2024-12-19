@@ -80,13 +80,10 @@ while step < 17:
     step += 1
 
 # [216584205979245, 216584205979327, 234176392023661, 234176392023743]
-print(min(solution))
-
-
-print(possibilite)
+print("il y a ", len(solution)," solutions")
 
 
 end_time = time.time()
 elapsed_time_ms = (end_time - start_time) * 1000
-print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est")
+print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est", min(solution))
 
