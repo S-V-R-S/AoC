@@ -58,55 +58,15 @@ def dijkstra(matrice, start, end):
     
     return path
 
-def d(matrice, start, end):
-
-    to_explore = [start]
-    explored = []
-    dico = {}
-    dico[start] = [0, None]
-    scoreB = []
-
-    while to_explore:
-        node = to_explore[0]
-        del to_explore[0]
-        explored.append(node)
-
-        neighbours = []
-        for dir in Direction:
-            x = node[0] + dir.value[0]
-            y = node[1] + dir.value[1]
-
-            if 0 <= x < len(matrice) and 0 <= y < len(matrice[0]):
-                    neighbours.append((x,y))
-
-        for new in neighbours:
-            point = new
-            total_cost = 1 + dico[node][0]
-
-            if point == end:
-                    scoreB.append(total_cost)
-        
-            if point in dico:
-                if dico[point][0] > total_cost:
-                    dico[point] = [total_cost, node]
-                    if (point) not in to_explore:
-                        to_explore.append(point)
-            else:
-                dico[point] = [total_cost, node]
-                if point not in to_explore:
-                    to_explore.append(point)
-
-    path = []
-    point = end
-    while point != start:
-         path.append(dico[point][1])
-         point = dico[point][1]
+def d(start, end):
+    x,y = start
+    x1, y1 = end
+    distance = abs(x-x1) + abs(y-y1)
     
-    return len(path)
+    return distance
 
-walls = []
 
-with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
+with open('adventOfCode/2024/input20.txt', encoding="UTF-8", mode= "r") as file:  
     lignes = file.read().splitlines()
     matrice = []
     for i, ligne in enumerate(lignes):
@@ -116,35 +76,31 @@ with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:
                 start = (j,i)
             if letter == "E":
                 end = (j,i)
-            if letter == "#" and i != 0 and j != 0 and i != len(matrice) and j != len(matrice[0]):
-                walls.append((j, i))
             matrice[i].append(letter)
 
 path = dijkstra(matrice, start, end)
 without = len(path)
 print("sans tricher", without)
-
-
+path.insert(0, end)
+path.reverse()
 somme = 0
-
+print(without)
 temps = 20
-
+dico = {}
+goal = 100
 for i, point in enumerate(path):
-    for destination in path[i:]:
-         raccourci = d(matrice, point, destination)
-         if raccourci < 21:
-              print(raccourci)
+    for j, destination in enumerate(path[i+goal:]):
 
+        raccourci = d(point, destination)
+        if raccourci <= temps:
+            benef = j+goal - raccourci
 
-    
-    hhhh = without-raccourci
-    if hhhh >= 74:
-            somme += 1
-
-print(somme)
+            if benef >= goal:
+                somme += 1
 
 
 
+# 1037936
 end_time = time.time()
 elapsed_time_ms = (end_time - start_time) * 1000
-print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est")
+print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est", somme)
