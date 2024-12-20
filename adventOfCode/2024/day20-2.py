@@ -1,7 +1,147 @@
 
 import time
+import re
+import math
+from heapq import heappush, heappop
+from enum import Enum
 start_time = time.time()
 
+class Direction(Enum):
+    NORD = (0 , -1)
+    SUD = (0, 1)
+    EST = (1, 0)
+    OUEST = (-1, 0)
+
+def dijkstra(matrice, start, end):
+
+    to_explore = [start]
+    explored = []
+    dico = {}
+    dico[start] = [0, None]
+    scoreB = []
+
+    while to_explore:
+        node = to_explore[0]
+        del to_explore[0]
+        explored.append(node)
+
+        neighbours = []
+        for dir in Direction:
+            x = node[0] + dir.value[0]
+            y = node[1] + dir.value[1]
+
+            if 0 <= x < len(matrice) and 0 <= y < len(matrice[0]) and matrice[y][x] != "#":
+                    neighbours.append((x,y))
+
+        for new in neighbours:
+            point = new
+            total_cost = 1 + dico[node][0]
+
+            if point == end:
+                    scoreB.append(total_cost)
+        
+            if point in dico:
+                if dico[point][0] > total_cost:
+                    dico[point] = [total_cost, node]
+                    if (point) not in to_explore:
+                        to_explore.append(point)
+            else:
+                dico[point] = [total_cost, node]
+                if point not in to_explore:
+                    to_explore.append(point)
+
+    path = []
+    point = end
+    while point != start:
+         path.append(dico[point][1])
+         point = dico[point][1]
+    
+    return path
+
+def d(matrice, start, end):
+
+    to_explore = [start]
+    explored = []
+    dico = {}
+    dico[start] = [0, None]
+    scoreB = []
+
+    while to_explore:
+        node = to_explore[0]
+        del to_explore[0]
+        explored.append(node)
+
+        neighbours = []
+        for dir in Direction:
+            x = node[0] + dir.value[0]
+            y = node[1] + dir.value[1]
+
+            if 0 <= x < len(matrice) and 0 <= y < len(matrice[0]):
+                    neighbours.append((x,y))
+
+        for new in neighbours:
+            point = new
+            total_cost = 1 + dico[node][0]
+
+            if point == end:
+                    scoreB.append(total_cost)
+        
+            if point in dico:
+                if dico[point][0] > total_cost:
+                    dico[point] = [total_cost, node]
+                    if (point) not in to_explore:
+                        to_explore.append(point)
+            else:
+                dico[point] = [total_cost, node]
+                if point not in to_explore:
+                    to_explore.append(point)
+
+    path = []
+    point = end
+    while point != start:
+         path.append(dico[point][1])
+         point = dico[point][1]
+    
+    return len(path)
+
+walls = []
+
+with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
+    lignes = file.read().splitlines()
+    matrice = []
+    for i, ligne in enumerate(lignes):
+        matrice.append([])
+        for j, letter in enumerate(ligne):
+            if letter == "S":
+                start = (j,i)
+            if letter == "E":
+                end = (j,i)
+            if letter == "#" and i != 0 and j != 0 and i != len(matrice) and j != len(matrice[0]):
+                walls.append((j, i))
+            matrice[i].append(letter)
+
+path = dijkstra(matrice, start, end)
+without = len(path)
+print("sans tricher", without)
+
+
+somme = 0
+
+temps = 20
+
+for i, point in enumerate(path):
+    for destination in path[i:]:
+         raccourci = d(matrice, point, destination)
+         if raccourci < 21:
+              print(raccourci)
+
+
+    
+    hhhh = without-raccourci
+    if hhhh >= 74:
+            somme += 1
+
+print(somme)
 
 
 
