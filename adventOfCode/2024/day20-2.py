@@ -80,11 +80,12 @@ with open('adventOfCode/2024/input20.txt', encoding="UTF-8", mode= "r") as file:
 
 path = dijkstra(matrice, start, end)
 without = len(path)
-print("sans tricher", without)
+
 path.insert(0, end)
+
 path.reverse()
 somme = 0
-print(without)
+
 temps = 20
 dico = {}
 goal = 100

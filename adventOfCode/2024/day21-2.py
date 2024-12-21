@@ -1,9 +1,6 @@
 
 import time
-import re
-import math
 from itertools import product
-from heapq import heappush, heappop
 from enum import Enum
 start_time = time.time()
 
@@ -13,11 +10,10 @@ class Direction(Enum):
     EST = (1, 0)
     OUEST = (-1, 0)
 
-
-with open('adventOfCode/2024/input.txt', encoding="UTF-8", mode= "r") as file:  
+cache = {}
+with open('adventOfCode/2024/input21.txt', encoding="UTF-8", mode= "r") as file:  
     lignes = file.read().splitlines()
 
-cache = {}
 R3 = [
     ["7", "8", "9"],
     ["4", "5", "6"],
@@ -159,27 +155,11 @@ def trad1(code):
         start = c
     return generation_combinations(dico)
 
-def trad2(code):
+def trad2(poss):
     total = []
-    for poss in code:
-        start = "A"
-        dico = {}
-        for i, c in enumerate(poss):
-            dico[i] = goto2(start, c)
-            start = c
-
-        total += generation_combinations(dico)
-        taille = min(len(l) for l in total)
-        true = [item for item in total if len(item) == taille]
-
-    return true
-
-def trad2r(duo, remaining):
-    total = []
-
     start = "A"
     dico = {}
-    for i, c in enumerate(duo):
+    for i, c in enumerate(poss):
         dico[i] = goto2(start, c)
         start = c
 
@@ -187,27 +167,49 @@ def trad2r(duo, remaining):
     taille = min(len(l) for l in total)
     true = [item for item in total if len(item) == taille]
 
-    for i in true:
-        trad2r(duo, remaining-1)
-    
-
     return true
+
+
+def trad2r(y, remaining):
+    if (y,remaining) in cache:
+        return cache[(y,remaining)] 
+    
+    if remaining == 1:
+        cache[(y,remaining)] = len(trad2(y)[0])
+        return len(trad2(y)[0])
+    
+    y = "A" + y
+    
+    score = 0
+    for p in range(len(y)-1):
+        rep = []
+        
+        new = goto2(y[p], y[p+1])
+        
+        for i in new:
+            rep.append(trad2r(i, remaining-1))
+
+        score += min(rep) 
+
+    cache[(y[1:],remaining)] = score
+    return score   
+
 
 
 
 somme = 0
-directionnel = 2
 
 for code in lignes:
-    poss = trad1(code)
+    step1 = trad1(code)
     
-    for i in range(directionnel):
-        poss= trad2(poss)
+    rep1 = []
+    for s in step1:
+        rep1.append(trad2r(s, 25))
+
+    somme += min(rep1)*int(code[:3])
 
 
-    somme += min(len(liste) for liste in poss)*int(code[:3])
-
-print(trad2r('<<', 25))
-
-# 184180
-print(somme)
+end_time = time.time()
+elapsed_time_ms = (end_time - start_time) * 1000
+print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est", somme)
+# 231309103124520
