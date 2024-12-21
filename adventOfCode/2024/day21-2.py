@@ -174,20 +174,40 @@ def trad2(code):
 
     return true
 
+def trad2r(duo, remaining):
+    total = []
+
+    start = "A"
+    dico = {}
+    for i, c in enumerate(duo):
+        dico[i] = goto2(start, c)
+        start = c
+
+    total += generation_combinations(dico)
+    taille = min(len(l) for l in total)
+    true = [item for item in total if len(item) == taille]
+
+    for i in true:
+        trad2r(duo, remaining-1)
+    
+
+    return true
+
+
 
 somme = 0
 directionnel = 2
 
 for code in lignes:
     poss = trad1(code)
+    
     for i in range(directionnel):
-        print(i)
         poss= trad2(poss)
 
 
     somme += min(len(liste) for liste in poss)*int(code[:3])
 
-
+print(trad2r('<<', 25))
 
 # 184180
 print(somme)
