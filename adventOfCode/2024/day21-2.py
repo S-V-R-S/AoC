@@ -155,43 +155,34 @@ def trad1(code):
         start = c
     return generation_combinations(dico)
 
-def trad2(poss):
-    total = []
-    start = "A"
-    dico = {}
-    for i, c in enumerate(poss):
-        dico[i] = goto2(start, c)
-        start = c
 
-    total += generation_combinations(dico)
-    taille = min(len(l) for l in total)
-    true = [item for item in total if len(item) == taille]
-
-    return true
-
-
-def trad2r(y, remaining):
-    if (y,remaining) in cache:
-        return cache[(y,remaining)] 
+def recursivite(sequence, remaining):
+    if (sequence,remaining) in cache:
+        return cache[(sequence,remaining)] 
     
+    sequence = "A" + sequence
+
     if remaining == 1:
-        cache[(y,remaining)] = len(trad2(y)[0])
-        return len(trad2(y)[0])
+        score = 0
+        for p in range(len(sequence)-1):
+            score += min(len(seq) for seq in goto2(sequence[p], sequence[p+1])) 
+
+        cache[(sequence,remaining)] = score
+        return score
     
-    y = "A" + y
     
     score = 0
-    for p in range(len(y)-1):
+    for p in range(len(sequence)-1):
         rep = []
         
-        new = goto2(y[p], y[p+1])
+        new = goto2(sequence[p], sequence[p+1])
         
         for i in new:
-            rep.append(trad2r(i, remaining-1))
+            rep.append(recursivite(i, remaining-1))
 
         score += min(rep) 
 
-    cache[(y[1:],remaining)] = score
+    cache[(sequence[1:],remaining)] = score
     return score   
 
 
@@ -200,12 +191,11 @@ def trad2r(y, remaining):
 somme = 0
 
 for code in lignes:
-    step1 = trad1(code)
-    
+    step1 = trad1(code)    
     rep1 = []
+    print(step1)
     for s in step1:
-        rep1.append(trad2r(s, 25))
-
+        rep1.append(recursivite(s, 25))
     somme += min(rep1)*int(code[:3])
 
 
