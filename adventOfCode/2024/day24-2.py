@@ -101,11 +101,7 @@ def enfants(liste):
             enfs.append(enfant)
             
     return enfs
-# print(enfants(difference("z10", "z09")))
-#10  kmb/z10, kks/10
-    # 15 {('tvp', 'z15'), ('qts', 'z15'), ('kvg', 'z15'), ('jkh', 'z15'), }
-# print(enfants(difference("z15", "z14")))
-# print(enfants(difference("z25", "z24")))
+
 
 z_problem = []   
 for z in liste_z:
@@ -144,11 +140,13 @@ while a+1 == score(a)  :
     
 a = 35
 p1, o, p2 = dico_operation["z35"]
-print(p1, p2)
+print(p1, dico_operation[p1])
+print(p2, dico_operation[p2])
+
 for cle in dico_operation.keys():
     x, o, y = dico_operation[cle]
     if (x == "x35" and y == "y35" or x == "y35" and y == "x35") and o == "XOR":
-        print(cle)
+        print(cle, dico_operation[cle])
         # vdk
         echanges.append([cle, "mmf"])
         break
@@ -177,9 +175,3 @@ if score(45) == 46:
 # end_time = time.time()
 # elapsed_time_ms = (end_time - start_time) * 1000
 # print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est")
-# dpg,kmb,mmf,tvp,vdk,z10,z15,z25
-
-# kmb,z10,
-# tvp,z15,
-# z25,dpg,
-# vdk,mmf
