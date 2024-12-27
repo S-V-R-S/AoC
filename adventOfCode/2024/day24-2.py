@@ -1,177 +1,56 @@
-
 import time
 start_time = time.time()
-import copy
 
 with open('adventOfCode/2024/input24.txt', encoding="UTF-8", mode= "r") as file:  
-    lignes = file.read().splitlines()          
-
-goal = "1011110000000011011110100010110111100010110000"
-dico = {}
-dico_operation = {}
-liste_z = []
-
-for ligne in lignes:
-    if ":" in ligne:
-        porte, valeur = ligne.split(": ")
-        dico[porte] = int(valeur)
-    if "-" in ligne:
-        p1, op, p2, f, p3 = ligne.split()
-        dico_operation[p3] = [p1, op, p2]
-        if p3[0] == "z":
-             liste_z.append(p3)
-             
-liste_z = sorted(liste_z)       
-echange = []
-score = 0
-
-def calcul(p3):
-    p1, op, p2 = dico_operation[p3]
-    if p1 in dico and p2 in dico:
-        if op == "AND":
-            if dico[p1] == 1 and dico[p2] == 1:
-                dico[p3] = 1
-            else:
-                dico[p3] = 0
-        elif op == "OR":
-            if dico[p1] == 1 or dico[p2] == 1:
-                dico[p3] = 1
-            else:
-                dico[p3] = 0
-        elif op == "XOR":
-            if dico[p1] == 1 and dico[p2] == 0 or dico[p1] == 0 and dico[p2] == 1:
-                dico[p3] = 1
-            else:
-                dico[p3] = 0
-        return
-    if p1 not in dico:
-        calcul(p1)
-    if p2 not in dico:
-        calcul(p2)
-    calcul(p3)
-
-echanges = []
-
-def score(numero):
-    score = 0
-    for i in range(numero + 1):
-        attendu = int(goal[-1-i])
-        z = liste_z[i]
-        calcul(z)
-        if attendu == dico[z]:
-            score +=1
-    return score
-
-def parents_z(point):
-    parents = []
-    to_explore = [point]
-    x_haut = 0
-    while to_explore:
-        p = to_explore.pop()
-        p1, op, p2 = dico_operation[p]
-        if p1[0] in "x,y":
-            parents.append(p1)
-            if int(p1[1:]) > x_haut:
-                x_haut = int(p1[1:])
-        elif p1 not in parents and p1 not in to_explore:
-            to_explore.append(p1)
-            parents.append(p1)
-        if p2[0] in "x,y":
-            parents.append(p2)
-        elif p2 not in parents and p2 not in to_explore:
-            to_explore.append(p2)
-            parents.append(p2)
-    return x_haut
-
-
-
-def difference(z1, z2):
-    l1 = parents_z(z1)
-    l2 = parents_z(z2)
-    resultat = list(set(l1) - set(l2))
-    return resultat
-
-def enfants(liste):
-    print("l", liste)
-    enfs = []
-    while liste:
-        enfant = liste.pop()
-        p1, op, p2 = dico_operation[enfant]
-        if p1 in liste or p1 in enfs or p2 in liste or p2 in enfs:
-            enfs.append(enfant)
-            
-    return enfs
-
-
-z_problem = []   
-for z in liste_z:
-    if dico_operation[z][1] != "XOR" and z[1:] != "45":
-        z_problem.append(z)
-  
-potentiel = [] 
-for cle in dico_operation.keys():
-    if dico_operation[cle][1] == "XOR" and dico_operation[cle][0][0] not in "xy" and cle[0] != "z":
-        potentiel.append(cle)
-        
-a_tester = z_problem + potentiel
-print(a_tester)
-
-# //todo trier les kmb tvp dpg en trouvent le z le plus haut
-print(parents_z("kmb"))  
-# 10 
-print(parents_z("tvp"))       
-# 15
-print(parents_z("dpg"))  
-# 25
-        
-echanges = [["kmb", "z10"],["tvp", "z15"],["dpg", "z25"]]
-
-for e in echanges:
-    x, y = e
-    dico_operation[x], dico_operation[y] = dico_operation[y], dico_operation[x]
+    lines = file.read().splitlines()  
     
+gates = {}
+wires = {}
+z_gates = []
 
-resultat = score(45)
-possible = []
-a = 0
+for line in lines:
+    if ":" in line:
+        gates[line.split(": ")[0]] = int(line.split(": ")[1])
+    elif "-" in line:
+        g1, operator, g2, output = line.replace('-> ', '').split(" ")
+        if output.startswith("z"): z_gates.append(output)
+        wires[output] = [g1, operator, g2]
 
-while a+1 == score(a)  :
-    a += 1
+wrong_outputs = set()
+
+higher_z = "z"+str(len(list(z for z in z_gates if z[0] == "z"))-1)
+
+for output in wires:
+    g1, operator, g2 = wires[output]
     
-a = 35
-p1, o, p2 = dico_operation["z35"]
-print(p1, dico_operation[p1])
-print(p2, dico_operation[p2])
-
-for cle in dico_operation.keys():
-    x, o, y = dico_operation[cle]
-    if (x == "x35" and y == "y35" or x == "y35" and y == "x35") and o == "XOR":
-        print(cle, dico_operation[cle])
-        # vdk
-        echanges.append([cle, "mmf"])
-        break
-
-
-dico_operation["mmf"], dico_operation[cle] = dico_operation[cle], dico_operation["mmf"]
-
-
-dico = {}
-for ligne in lignes:
-    if ":" in ligne:
-        porte, valeur = ligne.split(": ")
-        dico[porte] = int(valeur)
+    if output.startswith("z") and operator != 'XOR' and output != higher_z:
+        wrong_outputs.add(output)
         
-
-if score(45) == 46:
-    final = []
-    for echange in echanges:
-        e,c = echange
-        final.append(e)
-        final.append(c)
-    print(",".join(sorted(final)))
+    elif output == higher_z and operator != 'OR':
+        wrong_outputs.add(output)
+        
+    elif output[0] != "z" and operator == "XOR" and g1[0] not in 'yx':
+        wrong_outputs.add(output)
+        
+    elif output[0] not in 'zyx' and operator == 'AND' and g1[1:] != '00':
+        for w in wires:
+            child_g1, child_operator, child_g2 = wires[w]
+            if (child_g1 == output or child_g2 == output) and child_operator != "OR":
+                wrong_outputs.add(output)
+                
+    elif operator == 'OR' and output[0] != "z":
+        for w in wires:
+            child_g1, child_operator, child_g2 = wires[w]
+            if (child_g1 == output or child_g2 == output) and child_operator == "OR":
+                wrong_outputs.add(output)
+                print(output)
+        
+        
+print(",".join(wrong_wire for wrong_wire in sorted(wrong_outputs)))
 
 # dpg,kmb,mmf,tvp,vdk,z10,z15,z25
+end_time = time.time()
+elapsed_time_ms = (end_time - start_time) * 1000
+print(f"The program ran for {elapsed_time_ms:.2f} ms")
 
-# end_time = time.time()
-# elapsed_time_ms = (end_time - start_time) * 1000
-# print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est")
+
