@@ -2,7 +2,7 @@ import os
 
 def lire(nom: str):
 
-    with open(nom, encoding="UTF-8", mode= "r") as file:  
+    with open(nom, encoding="UTF-8", mode= "r") as file:   
             lignes = file.readlines()
     return lignes
 
