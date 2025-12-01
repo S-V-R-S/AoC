@@ -31,12 +31,23 @@ for ligne in lignes:
         
         if pointeur == 0:
                 compteur +=1
-        print(pointeur)
         
 print(compteur)       
                 
 # 980
+compteur = 0
+pointeur = 50 
 
+for ligne in lignes:
+        direction = ligne[0]
+        nombre = int(ligne[1:])
+        if direction == "L":
+                pointeur = (pointeur - nombre)%100
+        else:
+                pointeur = (pointeur + nombre)%100 
+        if pointeur == 0:
+                compteur +=1
+print(compteur)
 
 
 

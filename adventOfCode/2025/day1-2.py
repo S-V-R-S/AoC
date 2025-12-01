@@ -45,30 +45,33 @@ print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est")
                 
 # 5961
 
+compteur = 0
+pointeur = 50 
+
+for ligne in lignes:
+        direction = ligne[0]
+        nombre = int(ligne[1:])
+
+        if direction == "L":
+                if nombre >= pointeur and pointeur != 0:
+                        compteur += 1
+                compteur += abs(pointeur-nombre)//100
+                pointeur = (pointeur - nombre)%100
+
+
+        else:
+                compteur += abs(pointeur+nombre)//100
+                pointeur = (pointeur + nombre)%100 
+
+
+        
+        
+
+
+print(compteur)
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-end_time = time.time()
-elapsed_time_ms = (end_time - start_time) * 1000
-print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est")
