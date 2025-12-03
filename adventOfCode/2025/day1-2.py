@@ -7,7 +7,7 @@ import os
 
 
 
-with open('adventOfCode/2025/input1.txt', encoding="UTF-8", mode= "r") as file:  
+with open('adventOfCode/2025/input.txt', encoding="UTF-8", mode= "r") as file:  
 # with open('adventOfCode/2025/test.txt', encoding="UTF-8", mode= "r") as file:  
         lignes = file.read().splitlines()
 
