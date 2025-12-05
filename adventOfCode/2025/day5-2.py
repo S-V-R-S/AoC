@@ -8,16 +8,11 @@ with open('adventOfCode/2025/input.txt', encoding="UTF-8", mode= "r") as file:
 
 
 frais = []
-
-averifier = True
-
 somme = 0
 
 for s, ligne in enumerate(lignes.split("\n")):
         if "-" in ligne:
                 start, end = [int(j) for j in ligne.split("-")]
-                chevauchement = False
-                print("test" , start, end)
                 starts = [start]
                 ends = [end]
                 for i, plage in enumerate(frais):
@@ -40,4 +35,4 @@ print(somme)
 
 end_time = time.time()
 elapsed_time_ms = (end_time - start_time) * 1000
-print(f"Le programme a dure {elapsed_time_ms:.2f} ms est la reponse est")
+print(f"Le programme a dure {elapsed_time_ms:.2f} ms")
