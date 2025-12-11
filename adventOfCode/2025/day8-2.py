@@ -48,7 +48,7 @@ while not(end):
         valeur = groupes[b]
         for boitier in groupes.keys():
             if groupes[boitier] != valeur:
-                    same = False;
+                    same = False
                     break
         end = same
 

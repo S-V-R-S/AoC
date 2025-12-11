@@ -13,7 +13,7 @@ def allerOut(dico, porte, step):
                 if s != "out":
                         somme += allerOut(dico, s, step +1)
                 else:
-                    somme += 1
+                    return 1
 
         return somme 
         
@@ -29,7 +29,7 @@ for ligne in lignes:
         dico[entree] = sortiesList
 
 print(dico)
-print(allerOut(dico, "svr", 0))
+print(allerOut(dico, "you", 0))
 
 
                 
