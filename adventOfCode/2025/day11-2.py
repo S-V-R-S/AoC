@@ -1,4 +1,5 @@
 import time
+from functools import lru_cache
 
 start_time = time.time()
 
@@ -6,18 +7,20 @@ with open("adventOfCode/2025/test.txt", encoding="UTF-8", mode="r") as file:
     lignes = file.read().splitlines()
 
 
-def allerOut(dico, porte, fft, dac):
+@lru_cache(maxsize=None)
+def allerOut(porte, fft, dac):
+    global dico_parent_child
+    if "fft" == porte:
+        fft = True
+    if "dac" == porte:
+        dac = True
+
     if porte == "out":
         return 1 if fft and dac else 0
 
     somme = 0
-    for s in dico[porte]:
-        if "fft" == s:
-            fft = True
-        if "dac" == s:
-            dac = True
-
-        somme += allerOut(dico, s, fft, dac)
+    for s in dico_parent_child[porte]:
+        somme += allerOut(s, fft, dac)
 
     return somme
 
@@ -34,16 +37,48 @@ def simplify(dico_parent_child, dico_child_parent):
 
             print(k)
 
-            if klen(dico_parent_child[k]) == 1:
+            deleted = set()
+
+            if k not in deleted and len(dico_parent_child[k]) == 1:
                 print(f"del {k}")
+
+                # for parent in dico_child_parent[k]:
+                # print(parent)
+                # dico_parent_child[parent] += dico_parent_child[k]
+                # dico_parent_child[parent].remove(k)
+
+                # dico_child_parent[dico_parent_child[k][0]].remove(k)
+                # dico_child_parent[dico_parent_child[k][0]] += dico_parent_child[
+                #     parent
+                # ]
+
+                # del dico_parent_child[k]
+
+                # enfant de k : tty
+                childK = dico_parent_child[k][0]
+
+                # on ajout l'enfant de k à tous ses parents
                 for parent in dico_child_parent[k]:
-                    dico_parent_child[parent].append(dico_parent_child[k])
+                    dico_parent_child[parent].append(childK)
+
+                # on ajoute les parents de k a son enfant
+                dico_child_parent[childK] += dico_child_parent[k]
+
+                # on supprime k de son enfant
+                dico_child_parent[childK].remove(k)
+
+                # on supprime k de tous ses parents
+                for parent in dico_child_parent[k]:
                     dico_parent_child[parent].remove(k)
-                    del dico_parent_child[k]
 
-                    modified = True
+                modified = True
 
+                del dico_parent_child[k]
                 del dico_child_parent[k]
+
+                deleted.add(k)
+                # print(dico_parent_child)
+                # print(dico_child_parent)
 
     return dico_parent_child
 
@@ -60,9 +95,14 @@ for ligne in lignes:
         dico_child_parent[s].append(entree)
     dico_parent_child[entree] = sortiesList
 
+
 dico_parent_child = simplify(dico_parent_child, dico_child_parent)
+
+print("simplifiaction")
 print(dico_parent_child)
-print(allerOut(dico_parent_child, "svr", False, False))
+print(dico_child_parent)
+
+print(allerOut("svr", False, False))
 
 
 end_time = time.time()
