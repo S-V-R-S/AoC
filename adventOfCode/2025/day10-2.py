@@ -21,7 +21,10 @@ for ligne in lignes:
                inconnues[bouton] = pulp.LpVariable(bouton, lowBound=0, cat=pulp.LpInteger)
         
 # ajout les variables a la somme quil faut minimiser 
-        prob += pulp.lpSum(inconnues.values())
+        somme = 0
+        for i in inconnues.values():
+               somme += i
+        prob += somme
         
 # creer les equations a resoudre
         for i, o in enumerate(objectif):
