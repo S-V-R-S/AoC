@@ -1,5 +1,4 @@
 import time
-from functools import lru_cache
 
 start_time = time.time()
 
@@ -7,7 +6,9 @@ with open("adventOfCode/2025/test.txt", encoding="UTF-8", mode="r") as file:
     lignes = file.read().splitlines()
 
 
-@lru_cache(maxsize=None)
+cache = {}
+
+
 def allerOut(porte, fft, dac):
     global dico_parent_child
     if "fft" == porte:
@@ -18,10 +19,13 @@ def allerOut(porte, fft, dac):
     if porte == "out":
         return 1 if fft and dac else 0
 
+    if (porte, fft, dac) in cache:
+        return cache[(porte, fft, dac)]
+
     somme = 0
     for s in dico_parent_child[porte]:
         somme += allerOut(s, fft, dac)
-
+        cache[(porte, fft, dac)] = somme
     return somme
 
 
@@ -35,12 +39,9 @@ def simplify(dico_parent_child, dico_child_parent):
 
         for k in keys:
 
-            print(k)
-
             deleted = set()
 
             if k not in deleted and len(dico_parent_child[k]) == 1:
-                print(f"del {k}")
 
                 # for parent in dico_child_parent[k]:
                 # print(parent)
@@ -97,10 +98,6 @@ for ligne in lignes:
 
 
 dico_parent_child = simplify(dico_parent_child, dico_child_parent)
-
-print("simplifiaction")
-print(dico_parent_child)
-print(dico_child_parent)
 
 print(allerOut("svr", False, False))
 
